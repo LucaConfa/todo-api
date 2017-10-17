@@ -6,6 +6,7 @@ var app = express();
 var PORT = 3000;
 var todos = [];
 var todoNextId = 1;
+var requiredFields = ['description', 'completed'];
 
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -36,7 +37,14 @@ app.get('/todos/:id', (req, res) =>{
 // POST create new todo
 app.post('/todos', (req, res) => {
   let body = req.body;
-  
+  body = _.pick(body, requiredFields);
+
+  if(!_.isBoolean(body.completed) || !_.isString(body.description) 
+  || body.description.trim().length === 0){
+    return res.status(400).send('400');
+  }
+
+  body.description = body.description.trim();
   body.id = todoNextId++;
   todos.push(body);
 
