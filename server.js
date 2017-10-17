@@ -23,12 +23,9 @@ app.get('/todos', (req, res) =>{
 // GET todo by id
 app.get('/todos/:id', (req, res) =>{
   var todoId = parseInt(req.params.id, 10);
-  var foundTodo;
-  _.forEach(todos, todo => {
-    if(todo.id === todoId){
-      foundTodo = todo;
-    }
-  });
+
+  var foundTodo = _.find(todos,{id:todoId});
+
   if(typeof foundTodo === 'undefined'){
     res.status(404).send('404');
   } else {
